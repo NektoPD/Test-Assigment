@@ -16,7 +16,7 @@ namespace TheraBytes.BetterUi
 #if UNITY_2019_1_OR_NEWER
             "Selected",
 #endif
-            "Disabled", };
+            "Enabled", };
 
         public enum TransitionMode
         {
