@@ -12,6 +12,11 @@ namespace Forecast
         [SerializeField] private string _errorMessage;
         [SerializeField] private Image _weatherImage;
         [SerializeField] private TMP_Text _weatherText;
+
+        [SerializeField] private Sprite _errorSprite;
+
+        [SerializeField] private GameObject _loadingObject;
+        [SerializeField] private GameObject _contentObject;
         
         public IObservable<Unit> Disabled => _disabled;
         private readonly Subject<Unit> _disabled = new Subject<Unit>();
@@ -36,9 +41,11 @@ namespace Forecast
                 ShowError();
                 return;
             }
-            
+
             try
             {
+                ShowLoading();
+                
                 _weatherText.text = $"{data.Name} - {data.Temperature}{data.TemperatureUnit}";
 
                 if (!string.IsNullOrEmpty(data.Icon))
@@ -46,15 +53,33 @@ namespace Forecast
                     await LoadIcon(data.Icon);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 ShowError();
+            }
+            finally
+            {
+                HideLoading();
             }
         }
         
         public void ShowError()
         {
+            HideLoading();
             _weatherText.text = _errorMessage;
+            _weatherImage.sprite = _errorSprite;
+        }
+
+        private void ShowLoading()
+        {
+            _loadingObject.SetActive(true);
+            _contentObject.SetActive(false);
+        }
+
+        private void HideLoading()
+        {
+            _loadingObject.SetActive(false);
+            _contentObject.SetActive(true);
         }
         
         private async UniTask LoadIcon(string iconUrl)
@@ -82,6 +107,7 @@ namespace Forecast
             }
             catch (Exception e)
             {
+                _weatherImage.sprite = _errorSprite;
                 throw new ArgumentException(e.Message);
             }
         }

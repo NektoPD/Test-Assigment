@@ -54,7 +54,7 @@ namespace Forecast
 
                 return weatherData;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }

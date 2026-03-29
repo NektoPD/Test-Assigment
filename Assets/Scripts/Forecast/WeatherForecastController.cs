@@ -10,6 +10,7 @@ namespace Forecast
         private readonly WeatherForecastService _weatherService;
         private readonly WeatherForecastView _view;
         private readonly WeatherJSONParser _parser;
+        private readonly WeatherForecastConfig _forecastConfig;
         
         private readonly CompositeDisposable _disposables = new CompositeDisposable();
 
@@ -17,11 +18,13 @@ namespace Forecast
         public WeatherForecastController(
             WeatherForecastService weatherService,
             WeatherForecastView view,
-            WeatherJSONParser parser)
+            WeatherJSONParser parser,
+            WeatherForecastConfig config)
         {
             _weatherService = weatherService;
             _view = view;
             _parser = parser;
+            _forecastConfig = config;
         }
 
         public void Initialize()
@@ -33,16 +36,18 @@ namespace Forecast
 
             _view.Enabled.Subscribe(_ => StartRequests()).AddTo(_disposables);
             _view.Disabled.Subscribe(_ => StopRequests()).AddTo(_disposables);
+            
+            StartRequests();
         }
 
         private void StartRequests()
         {
-            _weatherService.StartProcessing();
+            _weatherService.StartAllRequests();
         }
 
         private void StopRequests()
         {
-            _weatherService.Stop();
+            _weatherService.StopAllRequests();
         }
 
         private void OnRequestCompleted(RequestResult result)
@@ -50,20 +55,12 @@ namespace Forecast
             if (result.Success && !string.IsNullOrEmpty(result.Json))
             {
                 var weatherData = _parser.ParseWeatherData(result.Json);
-                
-                if (weatherData != null)
-                {
-                    _view.UpdateWeatherDisplay(weatherData);
-                }
-                else
-                {
-                    _view.ShowError();
-                }
+                _view.UpdateWeatherDisplay(weatherData);
             }
             else
             {
                 _view.ShowError();
-            } 
+            }
         }
 
         private void OnRequestFailed()
