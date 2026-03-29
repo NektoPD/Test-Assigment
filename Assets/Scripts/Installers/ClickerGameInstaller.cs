@@ -23,14 +23,14 @@ namespace Installers
             Container.BindInstance(_playerView).AsSingle();
 
             Container.BindFactory<float, Vector3, FloatingText, FloatingText.Factory>()
-                .FromPoolableMemoryPool<float, Vector3, FloatingText>(poolBinder => poolBinder
+                .FromPoolableMemoryPool(poolBinder => poolBinder
                     .WithInitialSize(_poolInitialSize)
                     .FromComponentInNewPrefab(_floatingTextPrefab)
                     .UnderTransform(_poolParent)
                 );
 
             Container.BindFactory<Vector3, ClickParticle, ClickParticle.Factory>()
-                .FromPoolableMemoryPool<Vector3, ClickParticle>(poolBinder => poolBinder
+                .FromPoolableMemoryPool(poolBinder => poolBinder
                     .WithInitialSize(_poolInitialSize)
                     .FromComponentInNewPrefab(_clickParticlePrefab)
                     .UnderTransform(_poolParent)

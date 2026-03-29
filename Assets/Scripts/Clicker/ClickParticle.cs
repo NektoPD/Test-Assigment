@@ -9,7 +9,6 @@ namespace Clicker
     {
         [SerializeField] private ParticleSystem _particleSystem;
         
-        [Header("Offset Settings")]
         [SerializeField] private bool _useRandomOffset = true;
         [SerializeField] private float _offsetRadius = 0.3f;
         [SerializeField] private bool _useCircularOffset = true;

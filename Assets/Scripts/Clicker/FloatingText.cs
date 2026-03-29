@@ -49,7 +49,7 @@ namespace Clicker
             _pool = pool;
             
             _text.text = $"+{value:F0}";
-            _text.color = Color.white;
+            _text.color = Color.yellowNice;
             transform.localScale = Vector3.one * _startScale;
             _canvasGroup.alpha = _startAlpha;
             
