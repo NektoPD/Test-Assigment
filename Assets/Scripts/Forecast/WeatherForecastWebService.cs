@@ -80,7 +80,7 @@ namespace Forecast
                 {
                     break;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     _requestFailed.OnNext(Unit.Default);
 
