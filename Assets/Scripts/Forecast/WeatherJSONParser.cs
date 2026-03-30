@@ -1,63 +1,54 @@
 using System;
-using UnityEngine;
+using Core;
 
 namespace Forecast
 {
+    [Serializable]
+    public class WeatherJSONData
+    {
+        public WeatherProperties properties;
+    }
+
+    [Serializable]
+    public class WeatherProperties
+    {
+        public WeatherPeriod[] periods;
+    }
+
+    [Serializable]
+    public class WeatherPeriod
+    {
+        public string name;
+        public int temperature;
+        public string temperatureUnit;
+        public string icon;
+    }
+
     public class WeatherJSONParser
     {
-        [Serializable]
-        private class WeatherJSONData
-        {
-            public Properties properties;
-        }
+        private readonly JsonParser _parser;
 
-        [Serializable]
-        private class Properties
+        public WeatherJSONParser(JsonParser parser)
         {
-            public Period[] periods;
-        }
-
-        [Serializable]
-        private class Period
-        {
-            public string name;
-            public int temperature;
-            public string temperatureUnit;
-            public string icon;
+            _parser = parser;
         }
 
         public WeatherData ParseWeatherData(string json)
         {
-            if (string.IsNullOrEmpty(json))
-            {
+            var response = _parser.Parse<WeatherJSONData>(json);
+
+            if (response?.properties?.periods == null || response.properties.periods.Length == 0)
                 return null;
-            }
 
-            try
+            var p = response.properties.periods[0];
+
+            return new WeatherData
             {
-                var response = JsonUtility.FromJson<WeatherJSONData>(json);
-                
-                if (response?.properties?.periods == null || response.properties.periods.Length == 0)
-                {
-                    return null;
-                }
-
-                var firstPeriod = response.properties.periods[0];
-
-                var weatherData = new WeatherData
-                {
-                    Name = firstPeriod.name,
-                    Temperature = firstPeriod.temperature,
-                    TemperatureUnit = firstPeriod.temperatureUnit,
-                    Icon = firstPeriod.icon
-                };
-
-                return weatherData;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+                Name = p.name,
+                Temperature = p.temperature,
+                TemperatureUnit = p.temperatureUnit,
+                Icon = p.icon
+            };
         }
     }
 

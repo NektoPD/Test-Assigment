@@ -1,6 +1,8 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using UniRx;
+using UnityEngine;
 using Zenject;
 
 namespace BreedFacts
@@ -9,6 +11,7 @@ namespace BreedFacts
     {
         private readonly BreedScreenView _view;
         private readonly BreedService _service;
+        private readonly CompositeDisposable _disposables = new CompositeDisposable();
 
         private CancellationTokenSource _cts;
         private int _currentIndex = -1;
@@ -21,7 +24,21 @@ namespace BreedFacts
 
         public void Initialize()
         {
+            _view.OnScreenOpened.Subscribe(_ => OnScreenOpened()).AddTo(_disposables);
+            _view.OnScreenClosed.Subscribe(_ => OnScreenClosed()).AddTo(_disposables);
+        }
+
+        private void OnScreenOpened()
+        {
+            _view.ResetButtons();
             LoadList().Forget();
+        }
+
+        private void OnScreenClosed()
+        {
+            _cts?.Cancel();
+            _service.Cancel();
+            _currentIndex = -1;
         }
 
         private async UniTaskVoid LoadList()
@@ -35,15 +52,12 @@ namespace BreedFacts
                 if (i < breeds.Count)
                 {
                     int index = i;
-                    var breed = breeds[i];
+                    button.SetData(i + 1, breeds[i].Name);
 
-                    button.SetData(i + 1, breed.Name);
-
-                    button.Button.onClick.RemoveAllListeners();
-                    button.Button.onClick.AddListener(() =>
+                    button.OnClick.Subscribe(_ =>
                     {
-                        OnClick(index).Forget();
-                    });
+                        OnButtonClick(index).Forget();
+                    }).AddTo(_disposables);
                 }
                 else
                 {
@@ -52,16 +66,17 @@ namespace BreedFacts
             }
         }
 
-        private async UniTaskVoid OnClick(int index)
+        private async UniTaskVoid OnButtonClick(int index)
         {
             if (_currentIndex == index)
                 return;
 
             _service.Cancel();
             _cts?.Cancel();
+            _cts?.Dispose();
             _cts = new CancellationTokenSource();
 
-            if (_currentIndex >= 0)
+            if (_currentIndex >= 0 && _currentIndex < _view.Buttons.Length)
                 _view.Buttons[_currentIndex].ShowLoader(false);
 
             _currentIndex = index;
@@ -73,6 +88,7 @@ namespace BreedFacts
             var result = await _service.LoadBreed(breed.Id, _cts.Token);
 
             button.ShowLoader(false);
+            _currentIndex = -1;
 
             if (result != null)
                 _view.Popup.Show(result);
@@ -81,6 +97,8 @@ namespace BreedFacts
         public void Dispose()
         {
             _cts?.Cancel();
+            _cts?.Dispose();
+            _disposables.Dispose();
         }
     }
 }

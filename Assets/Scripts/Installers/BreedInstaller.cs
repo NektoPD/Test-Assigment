@@ -1,22 +1,23 @@
+using BreedFacts;
+using Breeds;
 using Core;
-using Forecast;
 using UnityEngine;
 using Zenject;
 
 namespace Installers
 {
-    public class WeatherForecastInstaller : MonoInstaller
+    public class BreedInstaller : MonoInstaller
     {
-        [SerializeField] private WeatherForecastConfig _config;
-        [SerializeField] private WeatherForecastView _view;
+        [SerializeField] private BreedRequestConfig _config;
+        [SerializeField] private BreedScreenView _view;
 
         public override void InstallBindings()
         {
-            Container.Bind<WeatherForecastConfig>()
+            Container.Bind<BreedRequestConfig>()
                 .FromInstance(_config)
                 .AsSingle();
 
-            Container.Bind<WeatherForecastView>()
+            Container.Bind<BreedScreenView>()
                 .FromInstance(_view)
                 .AsSingle();
 
@@ -28,14 +29,10 @@ namespace Installers
                 .AsSingle()
                 .IfNotBound();
 
-            Container.Bind<WeatherJSONParser>()
+            Container.Bind<BreedService>()
                 .AsSingle();
 
-            Container.Bind<WeatherForecastService>()
-                .AsSingle()
-                .NonLazy();
-
-            Container.BindInterfacesAndSelfTo<WeatherForecastController>()
+            Container.BindInterfacesAndSelfTo<BreedController>()
                 .AsSingle()
                 .NonLazy();
         }
