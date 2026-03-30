@@ -29,8 +29,6 @@ namespace Forecast
 
         public void Initialize()
         {
-            Debug.Log("[WeatherForecastController] Инициализация контроллера");
-
             _weatherService.RequestCompleted.Subscribe(OnRequestCompleted).AddTo(_disposables);
             _weatherService.RequestFailed.Subscribe(_ => OnRequestFailed()).AddTo(_disposables);
 

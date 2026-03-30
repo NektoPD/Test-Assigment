@@ -20,8 +20,6 @@ namespace Core
 
                     if (webRequest.result == UnityWebRequest.Result.Success)
                     {
-                        Debug.Log(webRequest.downloadHandler);
-                        
                         return webRequest.downloadHandler?.text ?? string.Empty;
                     }
 
