@@ -28,15 +28,6 @@ namespace BreedFacts
             _onDisable.OnNext(Unit.Default);
         }
 
-        public void ShowLoadingAll(bool value)
-        {
-            foreach (var button in _breedButtons)
-            {
-                button.ShowLoader(value);
-                button.SetInteractable(!value);
-            }
-        }
-
         public void ResetButtons()
         {
             foreach (var button in _breedButtons)

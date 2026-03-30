@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Core;
+using UnityEngine;
 
 namespace BreedFacts
 {
@@ -52,19 +54,19 @@ namespace BreedFacts
             var url = $"{_config.PublicApiGetBreedData}/{id}";
             var json = await _web.GetAsync(url, token);
 
-            var response = _parser.Parse<BreedItem>(json);
-
-            if (response == null)
-                return null;
+            var response = _parser.Parse<BreedFactData>(json);
 
             return new BreedData
             {
-                Id = response.id,
-                Name = response.attributes.name,
-                Description = response.attributes.description
+                Id = response.data.id,
+                Name = response.data.attributes.name,
+                Description = response.data.attributes.description
             };
         }
 
-        public void Cancel() => _web.CancelCurrent();
+        public void Cancel()
+        {
+            _web.CancelCurrent();
+        }
     }
 }

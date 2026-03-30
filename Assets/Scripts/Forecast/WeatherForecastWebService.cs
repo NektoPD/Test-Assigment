@@ -47,8 +47,6 @@ namespace Forecast
 
         private async UniTaskVoid AutoRequestLoop(CancellationToken token)
         {
-            Debug.Log("[WeatherForecastService] AutoRequestLoop started");
-
             while (_isRunning && !token.IsCancellationRequested)
             {
                 try
@@ -80,12 +78,10 @@ namespace Forecast
                 }
                 catch (OperationCanceledException)
                 {
-                    Debug.Log("[WeatherForecastService] AutoRequestLoop cancelled");
                     break;
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"[WeatherForecastService] Error: {ex}");
                     _requestFailed.OnNext(Unit.Default);
 
                     if (_isRunning && !token.IsCancellationRequested)
@@ -95,8 +91,6 @@ namespace Forecast
                     }
                 }
             }
-
-            Debug.Log("[WeatherForecastService] AutoRequestLoop exited");
         }
 
         public void Dispose()

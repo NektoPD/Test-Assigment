@@ -19,21 +19,8 @@ namespace Clicker
         [SerializeField] private Sprite[] _clickSprites;
 
         private Tweener _scaleTween;
-        private Sprite _originalSprite;
 
         public event Action OnClicked;
-
-        private void Awake()
-        {
-            if (_button == null)
-                _button = GetComponent<Button>();
-
-            if (_buttonImage == null && _button != null)
-                _buttonImage = _button.GetComponent<Image>();
-
-            if (_buttonImage != null)
-                _originalSprite = _buttonImage.sprite;
-        }
 
         private void OnEnable()
         {

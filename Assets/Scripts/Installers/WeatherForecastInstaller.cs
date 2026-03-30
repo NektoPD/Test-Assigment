@@ -20,14 +20,6 @@ namespace Installers
                 .FromInstance(_view)
                 .AsSingle();
 
-            Container.Bind<JsonParser>()
-                .AsSingle()
-                .IfNotBound();
-
-            Container.Bind<WebRequestService>()
-                .AsSingle()
-                .IfNotBound();
-
             Container.Bind<WeatherJSONParser>()
                 .AsSingle();
 

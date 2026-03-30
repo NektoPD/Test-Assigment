@@ -20,8 +20,15 @@ namespace BreedFacts
     {
         public string name;
         public string description;
+        public string id;
     }
 
+    [Serializable]
+    public class BreedFactData
+    {
+        public BreedItem data;
+    }
+    
     public class BreedData
     {
         public string Id;

@@ -78,21 +78,6 @@ public class BottomBar : MonoBehaviour
         buttonText.color = isSelected ? _selectedTextColor : _normalTextColor;
     }
 
-    public void ShowClickerScreen()
-    {
-        SwitchToScreen(_clickerScreen, _clickerButton);
-    }
-
-    public void ShowWeatherScreen()
-    {
-        SwitchToScreen(_weatherScreen, _weatherButton);
-    }
-
-    public void ShowBreedFactsScreen()
-    {
-        SwitchToScreen(_breedFactsScreen, _breedFactsButton);
-    }
-
     private void OnDestroy()
     {
         _clickerButton.onClick.RemoveAllListeners();

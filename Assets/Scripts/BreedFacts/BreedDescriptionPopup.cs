@@ -26,7 +26,7 @@ namespace BreedFacts
         {
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
-
+            
             gameObject.SetActive(true);
 
             _name.text = data.Name;

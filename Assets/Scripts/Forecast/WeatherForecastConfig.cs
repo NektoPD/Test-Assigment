@@ -7,6 +7,5 @@ namespace Forecast
     {
         public string PublicApi;
         public float RequestIntervalSeconds = 5f;
-        public int MaxQueueSize = 100;
     }
 }
